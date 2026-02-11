@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>haiiiooo katrinnna</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .card {
+  position: relative; /* TAMBAH INI */
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  width: 350px;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+  h1, h2 {
+    margin-bottom: 20px;
+  }
+
+  button {
+    padding: 12px 25px;
+    margin: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 30px;
+    border: none;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    transform: scale(1.1);
+  }
+
+  .yes-btn {
+    background: #ff4e88;
+    color: white;
+  }
+
+  .no-btn {
+    background: #ddd;
+    position: absolute;
+  }
+
+  input {
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    width: 80%;
+    text-align: center;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+</head>
+<body>
+
+<div id="passwordPage" class="card">
+  <h2>Masukin nama panggilan km buat aku dulu 😏</h2>
+  <input type="text" id="passwordInput" placeholder="Nama panggilan...">
+  <br><br>
+  <button onclick="checkPassword()">Masuk</button>
+</div>
+
+<div id="mainPage" class="card hidden">
+  <h1>Will you be my Valentine? 💖</h1>
+  <button onclick="yesClicked()">Yes 💘</button>
+  <button class="no-btn" onmouseover="moveButton(this)">No 😝</button>
+</div>
+
+<div id="yesPage" class="card hidden">
+  <h1>Yeyyy I knew you would click yes 😎💗</h1>
+  <button onclick="goToDate()">Lanjut</button>
+</div>
+
+<div id="datePage" class="card hidden">
+  <h2>Pilih tanggal ketemuan woyy 🥺</h2>
+  <input type="date" id="dateInput">
+  <br><br>
+  <button onclick="sendDate()">Send 💕</button>
+</div>
+
+<div id="memoryPage" class="card hidden">
+  <h2>ak keinget awal kt chatingan dh</h2>
+  <p>Awalnya biasa aja tapi lama-lama koq jdi beda yh???, srius nanya nih 😌</p>
+  <p>Chat kitaaa, isinya random bgt, klo kubaca ulang lucu banget njirz.</p>
+  <button onclick="thankYou()">Next </button>
+</div>
+
+<div id="thankPage" class="card hidden">
+  <h1>Thank you katrin rina erin arin</h1>
+  <p>Aku seneng 🫢.</p>
+  <p>syalan kli ini gbs kuhapus</p>
+</div>
+
+<script>
+  const SUPABASE_URL = "https://toaabeywzgengddszizz.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvYWFiZXl3emdlbmdkZHN6aXp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3Njg0NjUsImV4cCI6MjA4NjM0NDQ2NX0.0N6HH5lYKhGcGUY5VD049U9OZSJKGi-DMTnOig3nsI0";
+
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  function checkPassword() {
+    const input = document.getElementById("passwordInput").value;
+    if (input.toLowerCase() === "sea") {
+      document.getElementById("passwordPage").classList.add("hidden");
+      document.getElementById("mainPage").classList.remove("hidden");
+    } else {
+      alert("Salah 😝 coba lagi");
+    }
+  }
+
+  function moveButton(btn) {
+  const maxX = 250;
+  const maxY = 150;
+  btn.style.left = Math.random() * maxX + "px";
+  btn.style.top = Math.random() * maxY + "px";
+}
+
+
+  function yesClicked() {
+    document.getElementById("mainPage").classList.add("hidden");
+    document.getElementById("yesPage").classList.remove("hidden");
+  }
+
+  function goToDate() {
+    document.getElementById("yesPage").classList.add("hidden");
+    document.getElementById("datePage").classList.remove("hidden");
+  }
+
+  async function sendDate() {
+    const chosenDate = document.getElementById("dateInput").value;
+
+    if (!chosenDate) {
+      alert("Pilih tanggal dulu dong 😤");
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("valentine_dates")
+      .insert([{ chosen_date: chosenDate }]);
+
+    if (error) {
+      alert("Error kirim ke database 😭");
+      console.log(error);
+    } else {
+      document.getElementById("datePage").classList.add("hidden");
+      document.getElementById("memoryPage").classList.remove("hidden");
+    }
+  }
+
+  function thankYou() {
+    document.getElementById("memoryPage").classList.add("hidden");
+    document.getElementById("thankPage").classList.remove("hidden");
+  }
+
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.innerHTML = "💖";
+    heart.style.position = "absolute";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.top = window.innerHeight + "px";
+    heart.style.fontSize = "20px";
+    heart.style.animation = "floatUp 4s linear";
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 4000);
+  }, 800);
+</script>
+<style>
+@keyframes floatUp {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-100vh); opacity: 0; }
+}
+</style>
+</body>
+</html>
